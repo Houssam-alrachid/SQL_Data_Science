@@ -1,0 +1,130 @@
+CODES_OF_ASSIGNEMENT_COURSERA
+
+
+
+PART 1:
+-------
+1.
+
+SELECT COUNT(*)
+FROM table
+
+2.
+
+SELECT COUNT(DISTINCT Keys)
+FROM table
+
+3.
+
+	SELECT * FROM user 
+            WHERE name IS NULL OR review_count IS NULL OR yelping_since IS NULL OR useful IS NULL OR funny IS NULL OR cool IS NULL 
+			OR cool IS NULL OR fans IS NULL OR average_stars IS NULL OR compliment_hot IS NULL OR compliment_more IS NULL 
+			OR compliment_profile IS NULL OR compliment_cute IS NULL OR compliment_list IS NULL OR compliment_note IS NULL 
+			OR  compliment_plain IS NULL OR compliment_cool IS NULL OR compliment_funny IS NULL OR compliment_writer IS NULL 
+			OR compliment_photos IS NULL ;
+
+4.
+
+SELECT MIN(Column),MAX(Column),AVG(Column)
+FROM table
+
+
+5.
+
+    SELECT city,SUM(review_count) AS rev_sum
+    FROM business
+    GROUP BY city
+    ORDER BY NUM DESC
+
+
+6.
+
+
+SELECT stars, SUM(review_count) AS Count
+FROM business
+WHERE city == "Avon"
+GROUP BY stars;
+
+
+7.
+
+SELECT name, review_count
+FROM user
+ORDER BY review_count DESC
+LIMIT 3;
+
+
+
+8.
+
+WRITTEN
+
+
+9.
+
+    SELECT COUNT(*)									
+    FROM review										
+    WHERE text LIKE "%love%" ;
+
+    SELECT COUNT(*)									
+    FROM review										
+    WHERE text LIKE "%hate%"   ; 
+
+
+10.
+
+	SELECT name, fans
+    FROM user
+    ORDER BY fans DESC
+    LIMIT 10;
+
+11.
+
+SELECT name, fans
+, 100 * funny / ( SELECT SUM(funny) FROM user) AS Funny_Per
+, 100 * useful / (SELECT SUM(useful) FROM user) AS Useful_Per    
+FROM user    
+ORDER BY fans DESC  
+LIMIT 10;
+
+
+
+PART 2:
+
+1.
+i..
+     SELECT bus.name, bus.city, cat.category, bus.stars, ho.hours
+     FROM (business bus INNER JOIN category cat ON bus.id = cat.business_id) 
+     INNER JOIN hours ho ON ho.business_id = bus.id
+     WHERE bus.city = 'Toronto' AND cat.category = "Food"
+     GROUP BY bus.stars;
+
+
+ii..
+     SELECT bus.name, bus.city, cat.category, bus.stars, ho.hours, bus.review_count
+     FROM (business bus INNER JOIN category cat ON bus.id = cat.business_id) 
+     INNER JOIN hours ho ON ho.business_id = bus.id
+     WHERE bus.city = 'Toronto' AND cat.category = "Food"
+     GROUP BY bus.stars;
+
+
+iii..
+     SELECT bus.name, bus.city, cat.category, bus.stars, ho.hours, bus.review_count, bus.address, bus.postal_code
+     FROM (business bus INNER JOIN category cat ON bus.id = cat.business_id) 
+     INNER JOIN hours ho ON ho.business_id = bus.id
+     WHERE bus.city = 'Toronto' AND cat.category = "Food"
+     GROUP BY bus.stars;
+
+2.
+
+    SELECT AVG(bus.stars) AS avg_stars, SUM(bus.review_count) AS count_rev, AVG(bus.review_count) AS avg_rev, COUNT(rev.useful)+COUNT(rev.funny) AS useful_funny, bus.is_open
+    FROM business bus INNER JOIN review rev ON bus.id = rev.id
+    GROUP BY bus.is_open
+	
+3.
+    SELECT cat.category,COUNT(bus.name) AS Number_Of_Resturants,AVG(stars) AS Stars_avg, AVG(review_count) AS Count_avg, bus.city AS City
+    FROM (business bus INNER JOIN hours ho ON bus.id = ho.business_id)
+    INNER JOIN category cat ON cat.business_id = bus.id
+    WHERE cat.category IN ("Chinese","Mexican","French","Italian","Korean","Japanese","Indian")
+    GROUP BY cat.category
+    ORDER BY AVG(stars) DESC
